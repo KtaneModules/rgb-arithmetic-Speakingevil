@@ -1,1 +1,1 @@
-# rgb-arithmetic
+#[ModKit Wiki](../../wiki)
