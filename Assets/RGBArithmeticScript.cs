@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -211,7 +211,7 @@ public class RGBArithmeticScript : MonoBehaviour
             case 6:
                 for (int i = 0; i < 16; i++)
                     for (int j = 0; j < 3; j++)
-                        results[j][i] = new int[] { -1, 1, 0, -1, 1 }[(grids[0][j][i] + grids[1][j][i] == 0) ? 2 : (int)Mathf.Sign(grids[0][j][i] + grids[1][j][i]) + 2];
+                        results[j][i] = new int[] { -1, 1, 0, -1, 1 }[grids[0][j][i] + grids[1][j][i] + 2];
                 break;
             case 7:
                 for (int i = 0; i < 16; i++)
@@ -221,7 +221,7 @@ public class RGBArithmeticScript : MonoBehaviour
             case 8:
                 for (int i = 0; i < 16; i++)
                     for (int j = 0; j < 3; j++)
-                        results[j][i] = (grids[0][j][i] == grids[1][j][i]) ? 0 : ((grids[0][j][i] + grids[1][j][i] == 0) ? 0 : (int)Mathf.Sign(grids[0][j][i] + grids[1][j][i]) * -1);
+                        results[j][i] = (grids[0][j][i] == grids[1][j][i]) ? 0 : ((grids[0][j][i] + grids[1][j][i] == 0) ? 0 : (int)Mathf.Sign(grids[0][j][i] + grids[1][j][i]));
                 break;
         }
         for (int i = 0; i < 16; i++)
@@ -255,12 +255,6 @@ public class RGBArithmeticScript : MonoBehaviour
         }
         else
             module.HandleStrike();
-        if (stage == 2)
-            for (int i = 0; i < 16; i++)
-            {
-                gridL[i].material = ledcols[0];
-                gridR[i].material = ledcols[0];
-            }
         for (int i = -1; i < 16; i++)
             StartCoroutine(Submit(i, i > -1 && (inputgrid[i] == ansgrid[i]), all));
         for (int i = 0; i < 16; i++)
@@ -303,6 +297,11 @@ public class RGBArithmeticScript : MonoBehaviour
                 }
                 else
                 {
+                    for (int i = 0; i < 16; i++)
+                    {
+                        gridL[i].material = ledcols[0];
+                        gridR[i].material = ledcols[0];
+                    }
                     foreach (Renderer l in indleds)
                         l.material = ledcols[0];
                     for (int i = 0; i < 4; i++)
@@ -399,7 +398,7 @@ public class RGBArithmeticScript : MonoBehaviour
                     b.Add(true);
                     c.Add(new int[3] { "-0+".IndexOf(commands[i][0].ToString()) - 1, "-0+".IndexOf(commands[i][1].ToString()) - 1, "-0+".IndexOf(commands[i][2].ToString()) - 1 });
                 }
-                else if ("abcd".Contains(commands[i][0]) && "1234".Contains(commands[i][1]) && commands[i].Length == 2)
+                else if (commands[i].Length == 2 && "abcd".Contains(commands[i][0]) && "1234".Contains(commands[i][1]))
                 {
                     b.Add(false);
                     g.Add("abcd".IndexOf(commands[i][0]) + ("1234".IndexOf(commands[i][1]) * 4));
