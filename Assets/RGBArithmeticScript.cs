@@ -431,4 +431,37 @@ public class RGBArithmeticScript : MonoBehaviour
             }
         }
     }
+
+    private int[] IntToBalTer(int num)
+    {
+        return new int[3] { num / 9, (num / 3) % 3, num % 3 };
+    }
+
+    private IEnumerator TwitchHandleForcedSolve()
+    {
+        for (int st = stage; st < 3; st++)
+        {
+            for (int cell = 0; cell < 16; cell++)
+            {
+                if (ansgrid[cell] == inputgrid[cell])
+                    continue;
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        while (input[i] + 1 != IntToBalTer(ansgrid[cell])[i])
+                        {
+                            sels[i].OnInteract();
+                            yield return null;
+                        }
+                    }
+                    cells[cell].OnInteract();
+                    yield return null;
+                }
+            }
+            submit[0].OnInteract();
+            while (!gridinteract)
+                yield return true;
+        }
+    }
 }
