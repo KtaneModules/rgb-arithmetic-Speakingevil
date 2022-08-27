@@ -389,11 +389,11 @@ public class RGBArithmeticScript : MonoBehaviour
             List<int[]> c = new List<int[]> { };
             List<int> g = new List<int> { };
             List<bool> b = new List<bool> { };
-            string[] commands = command.ToLowerInvariant().Replace(",", "").Split();
+            string[] commands = command.ToLowerInvariant().Split(' ');
             for(int i = 0; i < commands.Length; i++)
             {
-                var m = Regex.Match(commands[i], @"^\s*([-0+, ]+)\s*$");
-                if(m.Success && commands[i].Length == 3)
+                var m = Regex.Match(commands[i], @"^\s*([-0+]{3})\s*$");
+                if (m.Success)
                 {
                     b.Add(true);
                     c.Add(new int[3] { "-0+".IndexOf(commands[i][0].ToString()) - 1, "-0+".IndexOf(commands[i][1].ToString()) - 1, "-0+".IndexOf(commands[i][2].ToString()) - 1 });
@@ -403,6 +403,8 @@ public class RGBArithmeticScript : MonoBehaviour
                     b.Add(false);
                     g.Add("abcd".IndexOf(commands[i][0]) + ("1234".IndexOf(commands[i][1]) * 4));
                 }
+                else if (commands[i].Replace(" ", "").Length == 0)
+                    continue;
                 else
                 {
                     yield return "sendtochaterror Invalid command: " + commands[i];
@@ -410,7 +412,7 @@ public class RGBArithmeticScript : MonoBehaviour
                 }
             }
             int[] indices = new int[2];
-            for(int i = 0; i < commands.Length; i++)
+            for(int i = 0; i < b.Count; i++)
             {
                 if (b[i])
                 {
